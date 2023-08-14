@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Code Quiz</title>
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
@@ -14,11 +15,20 @@
     </header>
     
     <!-- Title of game -->
-    <h1>Code Quiz Challange!</h1>
-    <p>Intoduction text to the game and how to use it</p>
-    <button class="start-game">Take Quiz</button>
-    <!-- need to make multiple button elements that appear on screen when the game starts with different text in them -->
-    <!-- have a element popup on the bottom saying wrong or right when they answer. -->
+    <div class="quiz-container">
+        <h1 class="quiz-questions">Code Quiz Challange!</h1>
+        <p class="temp-text">Intoduction text to the game and how to use it</p>
+        <!-- moved the start game button and made the question buttons.  -->
+        <button class="start-game" data-state="visible">Take Quiz</button>
+        <button class="questions" data-state="hidden"></button>
+        <button class="questions" data-state="hidden"></button>
+        <button class="questions" data-state="hidden"></button>
+        <button class="questions" data-state="hidden"></button>
+       
+        <!-- need to make multiple button elements that appear on screen when the game starts with different text in them -->
+        <!-- have a element popup on the bottom saying wrong or right when they answer. -->
+    </div>
 
+    <script src="js/script.js"></script>
 </body>
 </html>
