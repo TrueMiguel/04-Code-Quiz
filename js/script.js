@@ -18,9 +18,9 @@ var btnQuestion = document.querySelectorAll(".btn-question");
 
 // moved the individual queston arrays into one object that has the multiple arrays with answers.
 var questionAll = {
-    questions: ["Question 1: How do you spell door?", "Question 2: what is the number 1?", "Question 3: Which is a fruit"],
-    answers: [["Floor", "Door", "dooooor", "Moore"],["1", "2", "3", "4"],["Strawbery", "Coconut", "Tomatoe", "Dirt"],[],[]],
-    correct: ["Door", "1","Tomatoe"]
+    questions: ["Question 1: How do you spell door?", "Question 2: what is the number 1?", "Question 3: Which is a fruit", "Question 4: This is a test", "Question 5: Blue"],
+    answers: [["Floor", "Door", "dooooor", "Moore"],["1", "2", "3", "4"],["Strawbery", "Coconut", "Tomatoe", "Dirt"],["IDK", "No", "Maybe", "Yes"],["Orange", "Yellow", "Teal", "Red"]],
+    correct: ["Door", "1","Tomatoe", "Yes", "Teal"]
 }
 
 // updates the right and wrong text in the html
@@ -83,12 +83,13 @@ startG.addEventListener("click", function() {
 // forEach loop to add the eventListener to each button, 
 // then update the text of each button with the next question
 btnQuestion.forEach(function(btn) {
-    if (count > 5 ) {
-        return;
-    }
     btn.addEventListener("click", function(event){ 
+
+        counter++;
+
         answerCheck = event.target.textContent;
         
+        // check the target text for the answer
         if (answerCheck == questionAll.correct[counter]) {
             right++;
             rightCounter()
@@ -96,27 +97,43 @@ btnQuestion.forEach(function(btn) {
             wrong++;
             wrongCounter()
         }
-    
-        counter++;
+        
+        // exit the loop after a count of 5
+        if (counter >= 5) {
+            endGame();
+            return;   
+        }
+
         questions.textContent = questionAll.questions[counter];
-    
+        
         question1 = questionAll.answers[counter][0];
-        console.log(q2.q2Answers)
         btn1Question()
-    
+        
         question2 = questionAll.answers[counter][1];
         btn2Question()
-    
+        
         question3 = questionAll.answers[counter][2];
         btn3Question()
     
         question4 = questionAll.answers[counter][3];
         btn4Question()
+        console.log("answer area" + counter)
+        
         
     })
     
 });
 
+// endGame function that updates the page. Hides the question button, update the text in h1 and intro-text. 
+// 
+function endGame() {
+    btnQuestion.forEach(btn => {
+        btn.setAttribute("style", "display: none;");
+        btn.setAttribute("data-state", "hidden");
+    })
+    questions.textContent = "End of Quiz!";
+    introText.textContent = "Your score is " + right;
+}
 
 
 
