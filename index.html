@@ -10,7 +10,9 @@
 <body>
     <!-- planning to put the view high score link here along with the timer -->
     <header>
-        <p>View high scores</p>
+        <h2>Current score:</h2>
+        <p>Right: <span id="right">0</span></p>
+        <p>Wrong: <span id="wrong">0</span></p>
         <section class="timer"> Time: </section>
     </header>
     
@@ -20,11 +22,12 @@
         <p class="temp-text">Intoduction text to the game and how to use it</p>
         <!-- moved the start game button and made the question buttons.  -->
         <button class="start-game" data-state="visible">Take Quiz</button>
-        <button class="questions" data-state="hidden"></button>
-        <button class="questions" data-state="hidden"></button>
-        <button class="questions" data-state="hidden"></button>
-        <button class="questions" data-state="hidden"></button>
-       
+            <div class="question-btn-group">
+                <button class="questions" data-state="hidden"></button>
+                <button class="questions" data-state="hidden"></button>
+                <button class="questions" data-state="hidden"></button>
+                <button class="questions" data-state="hidden"></button>
+            </div>
         <!-- need to make multiple button elements that appear on screen when the game starts with different text in them -->
         <!-- have a element popup on the bottom saying wrong or right when they answer. -->
     </div>
