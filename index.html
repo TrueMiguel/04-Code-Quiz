@@ -9,7 +9,7 @@
 
 <body>
     <!-- planning to put the view high score link here along with the timer -->
-    <header>
+    <header id="header">
         <h2>Current score:</h2>
         <p>Right: <span id="right">0</span></p>
         <p>Wrong: <span id="wrong">0</span></p>
@@ -28,9 +28,18 @@
                 <button class="question-3 btn-question" data-state="hidden"></button>
                 <button class="question-4 btn-question" data-state="hidden"></button>
             </div>
-        <!-- need to make multiple button elements that appear on screen when the game starts with different text in them -->
-        <!-- have a element popup on the bottom saying wrong or right when they answer. -->
     </div>
+
+    <!-- <div class="game-save-container">
+    </div> -->
+    
+    <form id="gameSave">
+        <label for="initials">Please enter your initials:</label>
+        <input type="text" id="initial" name="initial" placeholder="initials" required>
+        <input type="submit" id="initial-submit" value="Submit">
+    </form>
+
+
 
     <script src="js/script.js"></script>
 </body>

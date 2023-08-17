@@ -4,6 +4,7 @@ var counter = 0;
 var rightEl = document.querySelector("#right");
 var wrongEl = document.querySelector("#wrong");
 var timmer = 0;
+var header = document.querySelector("#header")
 var questions = document.querySelector(".quiz-questions");
 var introText = document.querySelector(".intro-text");
 var quiz = document.querySelector(".quiz-container");
@@ -15,6 +16,13 @@ var btn3El = document.querySelector(".question-3");
 var btn4El = document.querySelector(".question-4");
 var startG = document.querySelector(".start-game");
 var btnQuestion = document.querySelectorAll(".btn-question");
+var gameSave = document.querySelector("#gameSave")
+var highScore = {
+    initial: [],
+    score: []
+}
+
+
 
 // moved the individual queston arrays into one object that has the multiple arrays with answers.
 var questionAll = {
@@ -90,7 +98,7 @@ btnQuestion.forEach(function(btn) {
         answerCheck = event.target.textContent;
         
         // check the target text for the answer
-        if (answerCheck == questionAll.correct[counter]) {
+        if (answerCheck == questionAll.correct[counter-1]) {
             right++;
             rightCounter()
         } else {
@@ -117,11 +125,7 @@ btnQuestion.forEach(function(btn) {
     
         question4 = questionAll.answers[counter][3];
         btn4Question()
-        console.log("answer area" + counter)
-        
-        
     })
-    
 });
 
 // endGame function that updates the page. Hides the question button, update the text in h1 and intro-text. 
@@ -131,11 +135,48 @@ function endGame() {
         btn.setAttribute("style", "display: none;");
         btn.setAttribute("data-state", "hidden");
     })
-    questions.textContent = "End of Quiz!";
-    introText.textContent = "Your score is " + right;
+
+    gameSave.setAttribute("style", "display: block")
+    header.setAttribute("style", "display: none")
+    questions.textContent = "High Scores"
+    introText.textContent = "your score:" + right;
+    
+    const form = document.getElementById("gameSave");
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
+        const initial = document.getElementById("initial").value;
+        
+        highScore.initial.push(initial)
+        highScore.score.push(right)
+        
+        // log information locally with initial. Use the initial as the key
+        // and then score as the value
+        localStorage.setItem("highScore", JSON.stringify(highScore))
+
+        scores()
+    })    
 }
 
+// create function to call localSaved data and then to create high score screen
+// need to iterate throught the get item of the new object array for the scores.
 
+function scores() {
+
+    var highScoresObject = JSON.parse(localStorage.getItem("highScore"))
+    
+    questions.textContent = "High Scores"
+    introText.setAttribute("style", "background-color: lightgoldenrodyellow")
+    gameSave.setAttribute("style", "display: none")
+    introText.textContent = "Ranking:" + highScoresObject.initial[0] + " " +  highScoresObject.score[0]
+
+    console.log(highScoresObject.initial[0], highScoresObject.score[0])
+}
+// need to have a state where all the elements are hidden then only
+// the list of high scores are shown, with a go back and clear scores button
+
+
+// after submit of the game save, have a go back button to start of the list
+// also have a clear score function. 
 
 
 
