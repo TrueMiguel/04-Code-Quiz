@@ -8,25 +8,28 @@
 </head>
 
 <body>
-    <!-- planning to put the view high score link here along with the timer -->
+    <!-- planning to put the view user score link here along with the timer -->
     <header id="header">
         <h2>Current score:</h2>
         <p>Right: <span id="right">0</span></p>
         <p>Wrong: <span id="wrong">0</span></p>
-        <section class="timer"> Time: </section>
+        <div class="timer"> Time: 100</div>
     </header>
     
+    <div class="userScoreLink">User Scores</div>
     <!-- Title of game -->
     <div class="quiz-container">
         <h1 class="quiz-questions">Code Quiz Challange!</h1>
         <p class="intro-text">Intoduction text to the game and how to use it</p>
         <!-- moved the start game button and made the question buttons.  -->
-        <button class="start-game" data-state="visible">Take Quiz</button>
+        <button class="start-game" id="try-again" data-state="visible">Take Quiz</button>
             <div class="question-btn-group">
                 <button class="question-1 btn-question" data-state="hidden"></button>
                 <button class="question-2 btn-question" data-state="hidden"></button>
                 <button class="question-3 btn-question" data-state="hidden"></button>
                 <button class="question-4 btn-question" data-state="hidden"></button>
+                <button class="return" data-state="hidden">Return</button>
+                <button class="clear" data-state="hidden">Clear Scores</button>
             </div>
     </div>
 
@@ -38,8 +41,6 @@
         <input type="text" id="initial" name="initial" placeholder="initials" required>
         <input type="submit" id="initial-submit" value="Submit">
     </form>
-
-
 
     <script src="js/script.js"></script>
 </body>

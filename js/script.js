@@ -1,9 +1,11 @@
 var right = 0;
 var wrong = 0;
 var counter = 0;
+var timer = 100;
+var timerEl = document.querySelector(".timer")
+var timeInterval;
 var rightEl = document.querySelector("#right");
 var wrongEl = document.querySelector("#wrong");
-var timmer = 0;
 var header = document.querySelector("#header")
 var questions = document.querySelector(".quiz-questions");
 var introText = document.querySelector(".intro-text");
@@ -17,18 +19,59 @@ var btn4El = document.querySelector(".question-4");
 var startG = document.querySelector(".start-game");
 var btnQuestion = document.querySelectorAll(".btn-question");
 var gameSave = document.querySelector("#gameSave")
-var highScore = {
-    initial: [],
-    score: []
+var returnBtn = document.querySelector(".return")
+var form = document.getElementById("initial-submit");
+var clearBtn = document.querySelector(".clear");
+var userScoreLink = document.querySelector(".userScoreLink")
+var timerInterval;
+
+
+// timer function. It will count down once the "take quiz" button is selected. 
+// Once it reaches 0 it will then display game over and give a option to return to the begining. 
+function setTime() {
+    timerInterval = setInterval(function(){
+        timer --;
+        timerEl.textContent = "Time: " + timer
+
+        if(timer == 0) {
+            clearInterval(timerInterval)
+
+            questions.textContent = "Time ran out, game over"
+            introText.textContent = "Please try again"
+           
+            var tryAgain =  document.querySelector(".return");
+            tryAgain.setAttribute("style", "display: block");
+            tryAgain.textContent = "Try again";
+            
+            btnQuestion.forEach(btn => {
+                btn.setAttribute("style", "display: none;");
+                btn.setAttribute("data-state", "hidden");
+            })
+
+            tryAgain.addEventListener("click", function() {
+                startReturn()
+            })
+        }
+        
+    }, 1000)
 }
 
 
+// clearing timer interval
+function stopTimer() {
+    clearInterval(timerInterval)
+}
+
+// event link on User Score text to go to the score screen
+userScoreLink.addEventListener("click", function() {
+    scores()
+})
 
 // moved the individual queston arrays into one object that has the multiple arrays with answers.
 var questionAll = {
-    questions: ["Question 1: How do you spell door?", "Question 2: what is the number 1?", "Question 3: Which is a fruit", "Question 4: This is a test", "Question 5: Blue"],
-    answers: [["Floor", "Door", "dooooor", "Moore"],["1", "2", "3", "4"],["Strawbery", "Coconut", "Tomatoe", "Dirt"],["IDK", "No", "Maybe", "Yes"],["Orange", "Yellow", "Teal", "Red"]],
-    correct: ["Door", "1","Tomatoe", "Yes", "Teal"]
+    questions: ["Question 1: What is the correct way to declare a variable in JavaScrip?", "Question 2: What is the result of the following code snippet? console.log(2 + '2')", "Question 3: What will be the output of the following code snippet? console.log(3 === '3')", "Question 4: Inside which HTML element do we put the JavaScript?", "Question 5: How do you write 'Hello World' in an alert box?"],
+    answers: [["var myVariable;", "let myVariable;", "const myVariable;", "All of the above"],["4", "22", '"22"', "NaN"],["true", "false", "NaN", "SyntaxError"],["<javascrip>", "<js>", "<scripting>", "<script>"],["alert('Hello World')", "alertBox('Hello World')", "msg('Hello World')", "msgBox('Hello World')"]],
+    correct: ["var myVariable;", '"22"',"false", "<script>", "alert('Hello World')"]
 }
 
 // updates the right and wrong text in the html
@@ -58,6 +101,7 @@ function btn4Question() {
 }
 
 
+
 // first event listener to start-game button. When "take quiz" is clicked it will hide the intro text and start button. Then unhide the question buttons. 
 startG.addEventListener("click", function() {
 
@@ -70,6 +114,10 @@ startG.addEventListener("click", function() {
         startGameButton.setAttribute("style", "display: none;");
         startGameButton.setAttribute("data-state", "hidden");
     }
+
+    var startGameButton =  document.querySelector(".start-game");
+    startGameButton.setAttribute("style", "display: none;");
+    startGameButton.setAttribute("data-state", "hidden");
 
     // changes the h1 text
     questions.textContent = questionAll.questions[counter]
@@ -86,6 +134,8 @@ startG.addEventListener("click", function() {
 
     question4 = questionAll.answers[counter][3];
     btn4Question()
+    
+    setTime()
 })
 
 // forEach loop to add the eventListener to each button, 
@@ -104,10 +154,13 @@ btnQuestion.forEach(function(btn) {
         } else {
             wrong++;
             wrongCounter()
+            // subtract time when answer is incorrect
+            timer -= 5;
         }
         
         // exit the loop after a count of 5
         if (counter >= 5) {
+            stopTimer()
             endGame();
             return;   
         }
@@ -138,140 +191,122 @@ function endGame() {
 
     gameSave.setAttribute("style", "display: block")
     header.setAttribute("style", "display: none")
-    questions.textContent = "High Scores"
+    questions.textContent = "User Scores"
     introText.textContent = "your score:" + right;
-    
-    const form = document.getElementById("gameSave");
-    form.addEventListener("submit", function(event) {
-        event.preventDefault();
-        const initial = document.getElementById("initial").value;
-        
-        highScore.initial.push(initial)
-        highScore.score.push(right)
-        
-        // log information locally with initial. Use the initial as the key
-        // and then score as the value
-        localStorage.setItem("highScore", JSON.stringify(highScore))
 
-        scores()
-    })    
+    userScoreLink.setAttribute("style", "display: none")
+    
 }
 
-// create function to call localSaved data and then to create high score screen
+form.addEventListener("click", function(event) {
+    event.preventDefault();
+
+    userScore = JSON.parse(localStorage.getItem("userScore"))
+    if (!userScore) {
+        var userScore = {
+            initial: [],
+            score: []
+        }
+    }
+
+    var initial = document.getElementById("initial").value;
+    
+    userScore.initial.push(initial)
+    userScore.score.push(right)
+    
+    // log information locally with initial. Use the initial as the key
+    // and then score as the value
+    localStorage.setItem("userScore", JSON.stringify(userScore))
+
+    scores()
+}) 
+
+// create function to call localSaved data and then to create user score screen
 // need to iterate throught the get item of the new object array for the scores.
 
 function scores() {
 
-    var highScoresObject = JSON.parse(localStorage.getItem("highScore"))
+    var startGameButton =  document.querySelector(".start-game");
+    startGameButton.setAttribute("style", "display: none;");
+    startGameButton.setAttribute("data-state", "hidden");
+    introText.textContent = "";
+
+    btnQuestion.forEach(btn => {
+        btn.setAttribute("style", "display: none;");
+        btn.setAttribute("data-state", "hidden");
+    })
+
+    stopTimer()
+    header.setAttribute("style", "display: none")
+
+
+    var userScoresObject = JSON.parse(localStorage.getItem("userScore"))
+    if (!userScoresObject) {
+        var userScoresObject = {
+            initial: [],
+            score: []
+        }
+    }
     
-    questions.textContent = "High Scores"
+    questions.textContent = "User Scores"
     introText.setAttribute("style", "background-color: lightgoldenrodyellow")
     gameSave.setAttribute("style", "display: none")
-    introText.textContent = "Ranking:" + highScoresObject.initial[0] + " " +  highScoresObject.score[0]
-
-    console.log(highScoresObject.initial[0], highScoresObject.score[0])
-}
-// need to have a state where all the elements are hidden then only
-// the list of high scores are shown, with a go back and clear scores button
-
-
-// after submit of the game save, have a go back button to start of the list
-// also have a clear score function. 
-
-
-
-
-
-
-// was having a issue with having the questions starting one afteranother. Asked ChatGPT and it came up with "promises and chaining"
-// function question1(event) {
-//     // event.preventDefault
-//     // return new Promise((resolve) => {
-//         // var questionButton = document.querySelectorAll(".questions");
-//         // questions.textContent = q1.q1Question;
-//         // // iterate throught the q array and inserts the question text in the button elements
-//         // for (var index = 0; index < questionButton.length; index++) {
-//         //     questionButton[index].textContent = q1.q1Answers[index]
-//         // }
-
-//         // selecting just the question buttons
-//         var qbg = document.querySelector(".question-btn-group");
-
-//         // event click to the question buttons to decied on the answer. 
-//         function handler(event) {
-//             const answerCheck = event.target.textContent;
-        
-//             if (answerCheck == "Door") {
-//                 right++;
-//                 rightCounter()
-//             } else {
-//                 wrong++;
-//                 wrongCounter()
-//             }
-
-//             qbg.removeEventListener("click", handler);
-//             resolve();
-//         };
-
-//         qbg.addEventListener("click", handler);
-// };
-
-
-// function question2() {
-//     return new Promise((resolve) => {
-//         questions.textContent = q2.q2Question;
-//         // iterate throught the q array and inserts the question text in the button elements
-//         for (var index = 0; index < questionButton.length; index++) {
-//             questionButton[index].textContent = q2.q2Answers[index]
-//         }
-
-//         // selecting just the question buttons
-//         var qbg = document.querySelector(".question-btn-group");
-
-//         // event click to the question buttons to decied on the answer. 
-//         function handler(event) {
-//             const answerCheck = event.target.textContent;
-        
-//             if (answerCheck == "1") {
-//                 right++;
-//                 rightCounter()
-//             } else {
-//                 wrong++;
-//                 wrongCounter()
-//             }
-
-//             qbg.removeEventListener("click", handler);
-
-//             resolve();
-//         };
-
-//         qbg.addEventListener("click", handler);
-//     });
-// }
-
-// question1()
-//     .then(question2)
-
-
-
-    // may or may not need this
-    // first question button 3
-    // var qb1 = document.body.children[1].children[3];
-    // var qb2 = document.body.children[1].children[4];
-    // var qb3 = document.body.children[1].children[5];
-    // var qb4 = document.body.children[1].children[6];
-
     
-// quizBtns()
+    // iterates through the userScoresObject array and then organize the key "initial" with the value "score" in a seperate array.
+    for (var i = 0; i < userScoresObject.initial.length; i++) {
+        var li = document.createElement("li");
+        li.textContent = "Ranking: " + userScoresObject.initial[i] + " " +  userScoresObject.score[i]
+        introText.append(li);
+    }
+   
+    returnBtn.setAttribute("style", "display: block")
+    returnBtn.setAttribute("data-state", "visible")
+    clearBtn.setAttribute("style", "display: block")
+    clearBtn.setAttribute("data-state", "visible")
 
-// // got the .start-game button to work with the addEventListener
-// quizBtn.addEventListener("click", question1)
+}
 
+returnBtn.addEventListener("click", function() {
+    startReturn()
+})
 
+//add event listener to clear user scores
+clearBtn.addEventListener("click", function() {
+    localStorage.clear();
+    introText.innerHTML = "";
+})
 
+// function to revert the screen back to the begining. 
+function startReturn() {
 
+    right = 0;
+    wrong = 0;
+    counter = 0;
+    timer = 100;
+    stopTimer()
 
-// going to review this code later to see why the setAttribute wasn't working
-// function quizBtns() {
-//     quizBtn.setAttribute("style", "display: none;")
-// }
+    rightEl.textContent = 0;
+    wrongEl.textContent = 0;
+
+    questions.textContent = "Code Quiz Challange!"
+    introText.textContent = "Intoduction text to the game and how to use it"
+    introText.setAttribute("style", "background-color: none")
+
+    var startGameButton =  document.querySelector(".start-game");
+    startGameButton.setAttribute("style", "display: block;");
+    startGameButton.setAttribute("data-state", "visible");
+    header.setAttribute("style", "display: flex")
+    startGameButton.textContent = "Take Quiz";
+
+    userScoreLink.setAttribute("style", "display: block")
+
+    btnQuestion.forEach(btn => {
+        btn.setAttribute("style", "display: none;");
+        btn.setAttribute("data-state", "hidden");
+    })
+
+    returnBtn.setAttribute("style", "display: none;")
+    returnBtn.setAttribute("data-state", "hidden")
+    clearBtn.setAttribute("style", "display: none;")
+    clearBtn.setAttribute("data-state", "hidden")
+}
