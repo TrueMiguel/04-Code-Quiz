@@ -47,7 +47,7 @@ https://truemiguel.github.io/04-Code-Quiz/
 ## Screen Shots <a id="screen-shots"></a>
 
 <!-- Resources -->
-![First Screen Shot](Projects/04-Code-Quiz/assets/Images/screen-shot-1.JPG)
-![Second Screen Shot](Projects/04-Code-Quiz/assets/Images/screen-shot-2.JPG)
-![Third Screen Shot](Projects/04-Code-Quiz/assets/Images/screen-shot-3.JPG)
+![First Screen Shot](assets/Images/screen-shot-1.JPG)
+![Second Screen Shot](assets/Images/screen-shot-2.JPG)
+![Third Screen Shot](assets/Images/screen-shot-3.JPG)
 ---
